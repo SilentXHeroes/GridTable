@@ -1,0 +1,294 @@
+@import "_color.scss";
+
+$errorColor: red;
+
+.gridTable {
+    overflow: hidden;
+    position: relative;
+    
+    input {
+        margin: 0;
+    }
+
+    .selectedRows {
+        color: blue;
+    }
+    .totalRows {
+        color: green;
+    }
+    
+    .thead, .thead-sub, .cb-row, .cb-total, .tfoot {
+        > div:not(.col-resizing) {
+            position: absolute;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+    
+    .thead, .thead-sub, .tfoot, .col-resizing {
+        height: 25px;
+    }
+    
+    .thead, .thead-sub, .tfoot {
+        height: 25px;
+        color: black;
+        font-size: 15px;
+        border-left: 1px solid #fff;
+        background-color: #e5e5e5;
+        
+        > div:not(.col-resizing) {
+            border-right: 1px solid #fff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 25px;
+            
+            &.editable {
+                background-color: #fffce6;
+            }
+            
+            > p {
+                display: inline;
+                width: unset!important;
+                padding: 0!important;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin: 0 5px;
+            }
+        }
+    }
+    
+    .thead, .tbody {
+        div[row-selection] {
+            width: 20px;
+            min-width: 20px;
+            max-width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+    }
+    
+    &.theme-full {
+        .thead, .tfoot {
+            color: $backgroundColor;
+        }
+    }
+    
+    .thead, .thead-sub {
+        font-weight: bold;
+        position: relative;
+        
+        div[row-selection] {
+            height: 100%;
+        }
+    }
+    
+    .tbody {
+        overflow-y: auto;
+        transition: box-shadow .2s;
+        position: relative;
+
+        &.toTop {
+            box-shadow: inset -9px -5px 9px 0px rgba(0, 0, 0, 0.25);
+        }
+        &.toBottom {
+            box-shadow: inset -9px 5px 9px 0px rgba(0, 0, 0, 0.25);
+        }
+        &.scrolling {
+            box-shadow: inset -9px 5px 9px 0px rgba(0, 0, 0, 0.25), inset -9px -5px 9px 0px rgba(0, 0, 0, 0.25);
+        }
+        
+        > .col-move {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: .2vw;
+            background-color: silver;
+            transform: translateX(-50%);
+        }
+
+        #groups {
+            position: relative;
+
+            &::-webkit-scrollbar {
+                width: 1vw;
+
+                &:horizontal{
+                    height: 1vw;
+                }
+            }
+
+            &::-webkit-scrollbar-track {
+                background: silver;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: inherit;
+            }
+
+            .cb-group, .cb-row, .cb-total {
+                position: absolute;
+                left: 0;
+                transition: background .1s;
+            }
+
+            .cb-total, .cb-group {
+                font-size: 1.1vw;
+                font-weight: bold;
+            }
+        
+            .cb-total {
+                background: #f0f0f0;
+            }
+
+            .cb-group {
+                background: #e4e4ff;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+
+                > span[class^="icon-"] {
+                    font-size: 1vw;
+                    padding: 2px;
+                    background-color: lightskyblue;
+                    margin: 0 4px;
+                }
+            }
+
+            .cb-row {
+                &.odd {
+                    background-color: rgba(135, 206, 250, 0.25);
+                }
+                &.even {
+                    background-color: #fff;
+                }
+                
+                &.empty {
+                    text-align: center;
+                    justify-content: center;
+                    color: black;
+                    font-style: italic;
+                    background-color: rgba(0,0,0,.05);
+                    cursor: default;
+                    width: 100%;
+                    padding: 1vw 0;
+                }
+
+                &.selected {
+                    background-color: rgba(33, 107, 153, 0.3) !important;
+                }
+
+                &.removed, &.error {
+                    background-color: rgba($errorColor, 0.3)!important;
+                }
+                &.added, &.success {
+                    background-color: rgba(85, 178, 88, 0.3)!important;
+                }
+
+                > div {
+                    border-right: 1px solid transparent;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    > p {
+                        display: inline-block;
+                        width: unset!important;
+                    }
+
+                    span[class*="icon-"] {
+                        cursor: pointer;
+                        font-size: 1.5em;
+                    }
+
+                    &.overflow {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    &.editable {                        
+                        &:not(.edit):not(.alwaysVisible) {
+                            > input, > select {
+                                pointer-events: none;
+                            }
+                        }
+                        
+                        > input, > select {
+                            width: 100%;
+                            height: 100%;
+                            z-index: 100;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            border: none;
+                            background-color: transparent;
+                        }
+                        
+                        &.edit, &.alwaysVisible {
+                            > input, > select {
+                                background-color: #fffce6!important;
+                            }
+                        }
+
+                        &.edit {
+                            padding: 0 5px;
+                        }
+                        
+                        &.alwaysVisible > input {
+                            background-color: #fff!important;
+                            border: 1px solid black;
+                        }
+                    }
+                }
+            }
+        }
+    }
+        
+    > div.col-resizing {
+        position: absolute;
+        top: 0;
+        width: .5vw;
+        transform: translateX(100%);
+        cursor: col-resize;
+        transition: background-color .1s;
+        z-index: 99;
+
+        &:hover {
+            background-color: rgba(0,0,0,.2);
+        }
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    @for $i from 1 through length($listeComplete) {
+        $color: darken(nth($listeCompleteColor, $i), 5%);
+        $name: nth($listeComplete, $i);
+
+        &.#{$name} {
+            &.theme-full {
+                .thead, .tfoot {
+                    background-color: $color;
+                }
+            }
+            .tbody #groups .cb-row:not(.empty) {
+                &.odd {
+                    background-color: rgba($color, .25);
+                }
+
+                &.selected {
+                    background-color: rgba($color, .4)!important;
+                }
+            }
+        }
+    }
+
+    &:not([no-hover]) .tbody .cb-row:not(.empty):not(.not-selectable) {
+        cursor: pointer;
+        
+        &:hover {
+            background-color: rgba(0,0,0,.1)!important;
+        }
+    }
+}
